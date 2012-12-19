@@ -1,0 +1,18 @@
+{
+  "name": "CornerDetectionExample",
+  "version": "0.0.0",
+  "description": "Corner Detection Example in Node",
+  "main": "corners.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Bjartwolf",
+  "license": "BSD",
+  "dependencies": {
+    "underscore": "~1.4.3",
+    "async": "~0.1.22",
+    "pngjs": "~0.4.0-alpha",
+    "jsfeat": "0.0.4"
+  }
+}
