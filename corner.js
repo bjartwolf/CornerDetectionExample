@@ -26,7 +26,7 @@ fs.createReadStream('otter_in_waterfall.png')
 
         // Detects corners in the gray Image, stores them in the corners object
         // Returns nr. of found corners
-        var count = jsfeat.fast_corners.detect(grayImg, corners, 3);
+        var count = jsfeat.fast_corners.detect(grayImg, corners, border);
 
         var non_null_corners = _.filter(corners, function (corner) {
            return corner.score > 0;
