@@ -5,7 +5,10 @@ var fs = require('fs'),
     _ = require('underscore');
 
 
-fs.createReadStream('otter_in_waterfall.png')
+// Takes a filename (should be png)
+// and writes a jsonfile with same name with corners
+module.exports = function (filename) {
+fs.createReadStream(filename)
     .pipe(new PNG({
         // Haven't bothered looking into this, here's what it means
         // http://www.w3.org/TR/PNG-Filters.html
@@ -32,14 +35,17 @@ fs.createReadStream('otter_in_waterfall.png')
            return corner.score > 0;
         });
 
-        // Creates a blue dot in each corner
-        _.each(non_null_corners, function (corner) {
-            var idx = (self.width*corner.y + corner.x) << 2;
-            self.data[idx] = 0;    // R
-            self.data[idx+1] = 0;  // G
-            self.data[idx+2] = 255;// B
-            self.data[idx+3] = 255;// Alpha (transparency)
-        });
+       fs.writeFile(filename.slice(0,-4) + '.js', JSON.stringify(non_null_corners, null, 4));
 
-        this.pack().pipe(fs.createWriteStream('out.png'));
+        // Creates a blue dot in each corner
+//        _.each(non_null_corners, function (corner) {
+//            var idx = (self.width*corner.y + corner.x) << 2;
+//            self.data[idx] = 0;    // R
+//            self.data[idx+1] = 0;  // G
+//            self.data[idx+2] = 255;// B
+//            self.data[idx+3] = 255;// Alpha (transparency)
+//        });
+//
+//        this.pack().pipe(fs.createWriteStream('out.png'));
     });
+};
