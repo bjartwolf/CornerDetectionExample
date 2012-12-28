@@ -1,9 +1,14 @@
 var _ = require('underscore');
 
 exports.matchCornerArrays = function (corners1, corners2) {
-    var sortedCorners1 = _.sortBy(corners1, function (corner) { return corner.score;});
+    var sortedCorners1 = _.sortBy(corners1, function (corner) { return 1/corner.score;});
+//    var sortedCorners1 = corners1;
     var nrOfCorners = sortedCorners1.length;
-    var sortedCorners2 = _.sortBy(corners2, function (corner) { return corner.score;});
+    var sortedCorners2 = _.sortBy(corners2, function (corner) { return 1/corner.score;});
+    console.log('*****');
+    console.log(sortedCorners1);
+    console.log(sortedCorners2);
+//    var sortedCorners2 = corners2
 //    console.log("Corners1");
 //    console.log(sortedCorners1);
 //    console.log("Corners2");
@@ -14,20 +19,16 @@ exports.matchCornerArrays = function (corners1, corners2) {
         function(memo, items) {
             var item1 = items[0];
             var item2 = items[1];
-//            console.log('****');
-//            console.log(item1);
-//            console.log(item2);
-            
             if (item1 === undefined) {
-                return item2.score*(Math.pow(item2.x,2) + Math.pow(item2.y,2));
+                return memo + item2.score*(Math.pow(item2.x,2) + Math.pow(item2.y,2));
             } else if (item2 === undefined) {
-                return item1.score*(Math.pow(item1.x,2) + Math.pow(item1.y,2));
+                return memo + item1.score*(Math.pow(item1.x,2) + Math.pow(item1.y,2));
             } else 
             {
-                return item1.score*(Math.pow((item1.x-item2.x),2) + Math.pow((item1.y-item2.y),2));
+                return memo + item1.score*(Math.pow((item1.x-item2.x),2) + Math.pow((item1.y-item2.y),2));
             }
         }, 0);
-    return squaredWeightedSum/1e5;
+    return squaredWeightedSum/1e6;
 }
 
 function getImages() {
