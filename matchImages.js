@@ -1,4 +1,18 @@
 var _ = require('underscore');
+var fs = require('fs');
+
+exports.getImages = function (dir) {
+    // read from disc
+   var files = fs.readdirSync(dir); 
+    // returns them from disk
+   var imageFiles = _.filter(files, function (file) { return file.slice(-2) === 'js';});
+   var imagesData = _.map(imageFiles, function (imageName) {
+       return { name: imageName,
+                corners: JSON.parse(fs.readFileSync(dir + '/' + imageName))};
+   });
+   return imagesData;
+}
+
 
 exports.matchCornerArrays = function (corners1, corners2) {
     var squaredDistance = function (corner1, corner2) {
@@ -19,25 +33,19 @@ exports.matchCornerArrays = function (corners1, corners2) {
         return memo;
      },
         { sum: 0,
-          corners2: corners2,
+          corners2: corners2
      });
 
    var unMatched = reducedList.corners2;
 
    var sumOfRest = _.reduce(unMatched, function (sum, item) { 
        return sum + item.score*1e4;
-   },0)
+   }, 0)
 
    var sumOfFirst = _.reduce(leftOverCornersInCorners1, function (sum, item) { 
        return sum + item.score*1e4;
-   },0)
+   }, 0)
    return (sumOfFirst + reducedList.sum + sumOfRest)/(1e6*corners1.length + 1);
-}
-
-function getImages() {
-    // should contain name of image and corners
-    // returns them from disk
-    return images;
 }
 
 function calculateMatchScores(imageToMatchAgainst, images) {
@@ -47,7 +55,7 @@ function calculateMatchScores(imageToMatchAgainst, images) {
     return images;
 }
 
-var allImages = getImages();
+var allImages =[]; //getImages();
 var image = _.find(allImages, function (image) {
     return image.name === 'image192.png';
     });
