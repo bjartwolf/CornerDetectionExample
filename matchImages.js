@@ -1,6 +1,9 @@
 var _ = require('underscore');
 
 exports.matchCornerArrays = function (corners1, corners2) {
+    var squaredDistance = function (corner1, corner2) {
+        return (Math.pow(corner1.x-corner2.x,2) + Math.pow(corner1.y-corner2.y,2));
+    }
     var sortedCorners1 = _.sortBy(corners1, function (corner) {
         return 1/corner.score;
     });
@@ -9,30 +12,31 @@ exports.matchCornerArrays = function (corners1, corners2) {
     var sortedCornersWithoutUnmatched = _.without.apply(null, _.flatten([[sortedCorners1], leftOverCornersInCorners1], true)); 
 
     // Reduce the list by combining to the closest value
-    var memo = { sum: 0,
-                 corners2: corners2,
-                 unmatchedCorners: [] };
 
      var reducedList = _.reduce(sortedCornersWithoutUnmatched, function (memo, corner) {
         var closestCorner = _.min(memo.corners2, function (corner2) {
-            return (Math.pow(corner.x-corner2.x,2) + Math.pow(corner.y-corner2.y,2));
+            return squaredDistance(corner, corner2);
         });
-        memo.sum = memo.sum + corner.score*(Math.pow(corner.x-closestCorner.x,2) + Math.pow(corner.y-closestCorner.y,2));
+        memo.sum = memo.sum + corner.score*squaredDistance(corner, closestCorner);
         memo.corners2 = _.without(memo.corners2, closestCorner);
         return memo;
-   }, memo);
+     },
+        // Memo
+        { sum: 0,
+          corners2: corners2,
+          unmatchedCorners: [] 
+     });
 
    var unMatched = reducedList.corners2;
 
    var sumOfRest = _.reduce(unMatched, function (sum, item) { 
-       return sum + Math.pow(item.score,2)*1e6;
+       return sum + item.score*1e4;
    },0)
 
    var sumOfFirst = _.reduce(leftOverCornersInCorners1, function (sum, item) { 
-       return sum + Math.pow(item.score,2)*1e6;
+       return sum + item.score*1e4;
    },0)
-
-   return (sumOfFirst + reducedList.sum + sumOfRest)/(1e8* corners1.length + 1);
+   return (sumOfFirst + reducedList.sum + sumOfRest)/(1e8*corners1.length + 1);
 }
 
 function getImages() {
