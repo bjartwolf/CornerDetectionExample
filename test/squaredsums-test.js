@@ -8,13 +8,13 @@ buster.testCase("Testing reading from disc", {
    "test that correct nr of files are returned": function () {
        assert.equals(822, getImages('video').length); 
    },
-   "test that image 82 has one corner": function () {
+   "test image 82": function () {
        var images = getImages('video');
        var image82 = _.find(images, function (image) {
            return image.name === 'image82.js';
        });
-       buster.log(image82);
-       assert.equals(1, image82.corners.length); 
+       assert.equals(image82.corners.length, 1); 
+       assert.equals(_.first(image82.corners).x, 160); 
    }
 });
 
