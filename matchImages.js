@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var fs = require('fs');
-
-exports.getImages = function (dir) {
+var getImages = function (dir) {
     // read from disc
    var files = fs.readdirSync(dir); 
     // returns them from disk
@@ -12,9 +11,9 @@ exports.getImages = function (dir) {
    });
    return imagesData;
 }
+exports.getImages = getImages;
 
-
-exports.matchCornerArrays = function (corners1, corners2) {
+var matchCornerArrays = function (corners1, corners2) {
     var squaredDistance = function (corner1, corner2) {
         return (Math.pow(corner1.x-corner2.x,2) + Math.pow(corner1.y-corner2.y,2));
     }
@@ -47,27 +46,29 @@ exports.matchCornerArrays = function (corners1, corners2) {
    }, 0)
    return (sumOfFirst + reducedList.sum + sumOfRest)/(1e6*corners1.length + 1);
 }
-
+exports.matchCornerArrays = matchCornerArrays;
 function calculateMatchScores(imageToMatchAgainst, images) {
     _.each(images, function (image) {
         image.match = matchCornerArrays(image.corners, imageToMatchAgainst.corners);
     });
     return images;
 }
+exports.oneToManyMatch = function (imageName) {
 
-var allImages =[]; //getImages();
-var image = _.find(allImages, function (image) {
-    return image.name === 'image192.png';
-    });
-var images = _.filter(allImages, function (image) {
-    return image.name !== 'image192.png';
-    });
-var imagesWithScores = calculateMatchScores(image, images);
+    var allImages = getImages('video');
+    var image = _.find(allImages, function (image) {
+        return image.name === imageName;
+        });
+    var images = _.filter(allImages, function (image) {
+        return image.name !== imageName;
+        });
 
-var sortedImages = _.sortBy(imagesWithScores, function (image) {
-    return image.score;
-    });
-
+    var imagesWithScores = calculateMatchScores(image, images);
+    var sortedImages = _.sortBy(imagesWithScores, function (image) {
+        return image.match;
+        });
+    return sortedImages;
+}
 // should write the output to a static html file
 // probably easier with a template-library
 // user underscore to render a file
