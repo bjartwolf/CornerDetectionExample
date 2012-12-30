@@ -6,7 +6,9 @@ var getImages = function (dir) {
     // returns them from disk
    var imageFiles = _.filter(files, function (file) { return file.slice(-2) === 'js';});
    var imagesData = _.map(imageFiles, function (imageName) {
+       var png = imageName.slice(0,-2) + "png";
        return { name: imageName,
+                png: png, 
                 corners: JSON.parse(fs.readFileSync(dir + '/' + imageName))};
    });
    return imagesData;
