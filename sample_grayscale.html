@@ -8,8 +8,10 @@
         <title>Based on JSFeat - JavaScript Computer Vision Library.</title>
         
 
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold|Inconsolata|PT+Sans:400,700">
         <link rel="stylesheet" href="css/bootstrap.css">
+        <script src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' type='text/javascript'> </script>
+
+
         <link rel="stylesheet" href="css/jsfeat.css">
 
    </head>
@@ -87,7 +89,10 @@
                 for (var i = 0; i < count ; i++) {
                    non_null_corners.push(corners[i]); 
                 }
-                console.log(non_null_corners.length);
+                // Should send the non-null corners to a webservice
+                // that calculates the match-score
+                $.ajax( {type: 'POST', url: 'http://localhost:3000/match', data: {corners: non_null_corners}});
+                //console.log(non_null_corners.length);
 
                 // Delete corners from array
                     stat.stop("grayscale");
