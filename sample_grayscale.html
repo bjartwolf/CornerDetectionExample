@@ -35,7 +35,7 @@
                }
                return count;
             };
-        }(1);
+        }(10);
         var socket = io.connect('http://localhost:4000');
         socket.on('result', function (data) {
             $('#matchingImage').attr('src', 'video/' + data.png);

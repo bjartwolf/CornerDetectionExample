@@ -58,6 +58,7 @@ function calculateMatchScores(imageToMatchAgainst, images) {
 exports.oneToManyMatch = function (imageName) {
 
     var allImages = getImages('video');
+//    var allImages = getImages('reduced_imageset');
     var image = _.find(allImages, function (image) {
         return image.name === imageName;
         });
@@ -71,6 +72,25 @@ exports.oneToManyMatch = function (imageName) {
         });
     return sortedImages;
 }
-// should write the output to a static html file
+
+//var images = getImages('video');
+var images = getImages('reduced_imageset');
+// some stupid stuff with properties in here
+exports.match = function (corners) {
+    return _.first(returnAllMatches(corners));
+}
+/// should write the output to a static html file
 // probably easier with a template-library
 // user underscore to render a file
+var returnAllMatches = function (corners) {
+    // images are cached from disk
+    _.each(images, function (image) {
+        image.match = matchCornerArrays(image.corners, corners.corners);
+    });
+    var sortedImages = _.sortBy(images, function (image) {
+        return image.match;
+    });
+    return sortedImages;
+}
+exports.returnAllMatches = returnAllMatches;
+
