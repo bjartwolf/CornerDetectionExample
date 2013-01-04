@@ -28,7 +28,22 @@
         <script type="text/javascript" src="node_modules/underscore/underscore-min.js"></script>
         <script type="text/javascript" src="js/compatibility.js"></script>
         <script type="text/javascript" src="js/profiler.js"></script>
+        <script type="text/javascript" src="http://localhost:4000/socket.io/socket.io.js"></script>
         <script type="text/javascript">
+        var counter = function (init) {
+            var count = init;
+            return function () {
+               count--;
+               if (count < 0) {
+                    count = init;
+               }
+               return count;
+            };
+        }(7);
+        var socket = io.connect('http://localhost:4000');
+        socket.on('result', function (data) {
+            $('#matchingImage').attr('src', 'video/' + data.png);
+        });
 
         $(window).load(function() {
             "use strict";
@@ -84,14 +99,28 @@
                 // Returns nr. of found corners
                 var count = jsfeat.fast_corners.detect(img_u8, corners, border);
 
-                    stat.start("grayscale");
+                stat.start("grayscale");
                 var non_null_corners = [];
                 for (var i = 0; i < count ; i++) {
                    non_null_corners.push(corners[i]); 
                 }
                 // Should send the non-null corners to a webservice
                 // that calculates the match-score
-                $.ajax( {type: 'POST', url: 'http://localhost:3000/match', data: {corners: non_null_corners}});
+               
+
+                // Only post like every fith image
+               
+                if (counter() == 0) {
+                    console.log(non_null_corners);
+                    socket.emit('match', {corners: non_null_corners});       
+         //               $.ajax( {type: 'POST', url: 'http://localhost:3000/match', data: {corners: non_null_corners},
+         //               success: function (data) {
+         //                     if (data.png) {
+        //                          $('#matchingImage').attr('src', 'video/' + data.png);
+           //                   }
+          //              }
+            //            });
+                } 
                 //console.log(non_null_corners.length);
 
                 // Delete corners from array
@@ -119,5 +148,6 @@
             });
         });
         </script>
+        <image id='matchingImage' src='video/image1.png'> </image>
     </body>
 </html>
