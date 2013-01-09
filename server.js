@@ -1,14 +1,14 @@
-var express = require('express');
-var matchImages = require('./matchImages.js');
-var htmltemplate = require('./indexHTMLTemplate.js');
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app),
+    matchImages = require('./matchImages.js'),
+    htmltemplate = require('./indexHTMLTemplate.js'),
+    io = require('socket.io').listen(server);
 
-var app = express(); 
-app.use(express.bodyParser());
-
-var io = require('socket.io').listen(4000);
 io.set('log level', 1);
+
 io.sockets.on('connection', function (socket) {
-    socket.on('allMatches', function (data) {
+    socket.on('allMatches', function (data) { 
         var sortedImages = matchImages.returnAllMatches(data);
         var html = htmltemplate.generateList(sortedImages);
         socket.emit('resultHTML', html);
@@ -17,8 +17,10 @@ io.sockets.on('connection', function (socket) {
         var sortedImages = matchImages.returnAllMatches(data);
         socket.emit('result', sortedImages);
     });
-
 });
 
-app.listen(80);
-app.use('/', express.static(__dirname + '/'));
+app.use(express.bodyParser());
+app.use('/', express.static(__dirname + '/public'));
+app.use('/video', express.static(__dirname + '/video'));
+
+server.listen(process.env.port || 1337);
