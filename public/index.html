@@ -11,7 +11,7 @@
    </head>
     <body>
             <div style='height: 200px' id='result'> </div>
-            <video src='video.mp4' id="webcam" width="640" height="480" style="display:none;"></video>
+            <video src='http://bjartwolf.blob.core.windows.net/videos/video.mp4' id="webcam" width="640" height="480" style="display:none;"></video>
             <div style=" width:640px;height:480px;margin: 10px auto;">
                 <canvas id="canvas" width="640" height="480"></canvas>
                 <div id="no_rtc" class="alert alert-error" style="display:none;"></div>
@@ -113,6 +113,7 @@
                 // Only post like every fith image
                
                 if (counter() == 0) {
+                    console.log('dfasfa');
                     if (init) { 
                         socket.emit('allMatches', {corners: non_null_corners});
                         init = false;
