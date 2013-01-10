@@ -21,6 +21,4 @@ io.sockets.on('connection', function (socket) {
 
 app.use(express.bodyParser());
 app.use('/', express.static(__dirname + '/public'));
-app.use('/video', express.static(__dirname + '/video'));
-
 server.listen(process.env.port || 1337);
