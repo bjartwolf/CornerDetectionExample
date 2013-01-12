@@ -9,13 +9,11 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
     socket.on('allMatches', function (data) { 
-        console.log('allmatchers');
         var sortedImages = matchImages.returnAllMatches(data);
         var html = htmltemplate.generateList(sortedImages);
         socket.emit('resultHTML', html);
     });
     socket.on('allMatchesNoImage', function (data) {
-        console.log('nomimages');
         var sortedImages = matchImages.returnAllMatches(data);
         socket.emit('result', sortedImages);
     });
